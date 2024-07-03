@@ -1,59 +1,28 @@
 @import url('https://fonts.googleapis.com/css2?family=Monoton&family=Ubuntu:wght@300;400;500;700&display=swap');
+
 * {
     margin: 0;
     padding: 0;
     overflow: hidden;
-  }
-  
-  .rain-container {
-    position: relative;
-    background-image: url(phoin.jpg);
-    width: 100vw;
-    height: 100vh;
-  }
+}
 
-  img {
-    width: 100%;
-    height: 100%;
-  }
-  
-  i {
-    position: absolute;
-    height: 120px;
-    border-radius: 0 0 999px 999px;
-    animation: animate 5s linear infinite;
-  }
-
-  .NeonRust{
-    font-family: 'Monoton';
-    color: rgb(246, 246, 246);
-    text-shadow: 5px 7px 9px rgb(78, 211, 209);
-    text-align: center;
-    font-size: 100px;
-    font-weight: 10;
-    cursor: pointer;
-    transition: 0.5s;
-  }
-
-  .NeonRust:hover{
-    text-shadow: rgb(0, 0, 0);
-    color: aqua;
-    transform: scaleX(2);
-  }
-
-  /* styles.css */
 body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
   line-height: 1.6;
   background: #f0f0f0;
+  overflow-x: hidden;
 }
 
 header {
   background: rgba(51, 51, 51, 0.8); /* Полупрозрачный черный */
   color: #fff;
   padding: 1rem 0;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  animation: slideIn 0.6s ease-out;
 }
 
 nav ul {
@@ -63,8 +32,26 @@ nav ul {
 }
 
 nav ul li {
-  display: inline;
+  display: inline-block;
   margin: 0 1rem;
+  position: relative;
+}
+
+nav ul li::after {
+  content: '';
+  display: block;
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 0;
+  height: 3px;
+  background: #fff;
+  transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+nav ul li:hover::after {
+  width: 100%;
+  background: #ff6f61;
 }
 
 nav ul li a {
@@ -72,13 +59,14 @@ nav ul li a {
   text-decoration: none;
   padding: 10px 20px;
   background-color: #ff6f61;
-  border-radius: 5px;
-  transition: background-color 0.3s, box-shadow 0.3s;
+  border-radius: 20px; /* Закругленные края */
+  transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
 }
 
 nav ul li a:hover {
   background-color: #ff3b2e;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transform: translateY(-2px);
 }
 
 section {
@@ -87,11 +75,25 @@ section {
   background: rgba(255, 255, 255, 0.8); /* Полупрозрачный белый */
   margin: 1rem;
   border-radius: 10px;
-  transition: transform 0.5s;
+  transition: transform 0.5s ease, box-shadow 0.5s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  animation: fadeInUp 0.6s ease-out;
+  position: relative;
 }
 
 section:hover {
-  transform: scale(1.05);
+  transform: scale(1.05) rotate(2deg);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+/* Эффект наклона в зависимости от мыши */
+section.mouse-move {
+  perspective: 1000px;
+}
+
+section.mouse-move:hover {
+  transform: scale(1.05) rotateY(var(--rotateY, 0deg)) rotateX(var(--rotateX, 0deg));
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
 }
 
 button, a.button {
@@ -100,15 +102,17 @@ button, a.button {
   color: #fff;
   background-color: #007bff;
   border: none;
-  border-radius: 5px;
+  border-radius: 20px; /* Закругленные края */
   cursor: pointer;
   text-decoration: none;
-  transition: background-color 0.3s, box-shadow 0.3s;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+  margin-top: 1rem; /* Добавлен отступ сверху */
 }
 
 button:hover, a.button:hover {
   background-color: #0056b3;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transform: translateY(-2px);
 }
 
 footer {
@@ -119,31 +123,137 @@ footer {
   position: fixed;
   bottom: 0;
   width: 100%;
+  box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  animation: slideIn 0.6s ease-out;
 }
 
-  
-  @keyframes animate {
-    0% {
-      transform: translateY(-120px);
-    }
-    100% {
-      transform: translateY(calc(100vh + 120px));
-    }
-  }
+.rain-container {
+  position: relative;
+  background-image: url(phoin.jpg);
+  background-size: cover;
+  background-position: center;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden; /* Скрыть элементы, выходящие за пределы контейнера */
+}
 
+.rain-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.2); /* Затемнение фона */
+  z-index: 1; /* Помещаем на передний план */
+  pointer-events: none; /* Отключить взаимодействие с фоном */
+}
+
+img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+i {
+  position: absolute;
+  height: 120px;
+  border-radius: 0 0 999px 999px;
+  animation: animate 5s linear infinite, fadeIn 1s ease-in-out infinite;
+}
+
+.NeonRust {
+  font-family: 'Monoton';
+  color: rgb(246, 246, 246);
+  text-shadow: 0 0 10px rgb(78, 211, 209), 0 0 20px rgb(78, 211, 209), 0 0 30px rgb(78, 211, 209), 0 0 40px rgb(78, 211, 209);
+  text-align: center;
+  font-size: 100px;
+  font-weight: 10;
+  cursor: pointer;
+  transition: 0.5s ease, transform 0.3s ease;
+  animation: pulse 2s infinite;
+  z-index: 2; /* Помещаем текст на передний план */
+}
+
+.NeonRust:hover {
+  text-shadow: 0 0 20px rgba(0, 255, 255, 0.8), 0 0 30px rgba(0, 255, 255, 0.6), 0 0 40px rgba(0, 255, 255, 0.4), 0 0 50px rgba(0, 255, 255, 0.2);
+  color: aqua;
+  transform: scale(1.1) rotate(-5deg);
+}
+
+@keyframes animate {
+  0% {
+    transform: translateY(-120px);
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateY(calc(100vh + 120px));
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes pulse {
+  0% {
+    text-shadow: 0 0 10px rgba(78, 211, 209, 0.7), 0 0 20px rgba(78, 211, 209, 0.5), 0 0 30px rgba(78, 211, 209, 0.3);
+  }
+  50% {
+    text-shadow: 0 0 20px rgba(78, 211, 209, 0.9), 0 0 30px rgba(78, 211, 209, 0.7), 0 0 40px rgba(78, 211, 209, 0.5);
+  }
+  100% {
+    text-shadow: 0 0 10px rgba(78, 211, 209, 0.7), 0 0 20px rgba(78, 211, 209, 0.5), 0 0 30px rgba(78, 211, 209, 0.3);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
 .btn-close:hover {
-    background: #cc0000;
+  background: #cc0000;
+  transform: scale(1.1);
 }
 
 .btn {
   padding: 15px 30px;
-  border-radius: 5px;
+  border-radius: 20px; /* Закругленные края */
   text-decoration: none;
   font-size: 1.2em;
-  transition: background 0.3s, transform 0.3s, box-shadow 0.3s;
+  transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
 }
-
 
 .btn-secondary {
   background: #111211;
@@ -155,15 +265,56 @@ footer {
   padding: 10px 20px;
   font-size: 16px;
   color: #fff;
-  background-color: #007bff;
+  background-color: #111211;
   border: none;
-  border-radius: 5px;
+  border-radius: 20px; /* Закругленные края */
   cursor: pointer;
   text-decoration: none;
-  transition: background-color 0.3s, box-shadow 0.3s;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
 }
 
 .btn-secondary:hover {
-  background-color: #0056b3;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  background-color: #000000;
+  box-shadow: 0 0 15px #0ff;
+  transform: scale(1.1);
+}
+
+/* Медиазапросы для адаптации на мобильных устройствах */
+@media (max-width: 768px) {
+  .NeonRust {
+    font-size: 50px;
+  }
+  
+  nav ul li {
+    display: block;
+    margin: 0.5rem 0;
+  }
+  
+  .rain-container {
+    background-size: cover;
+  }
+  
+  section {
+    margin: 0.5rem;
+    padding: 1rem;
+  }
+  
+  .btn {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+  
+  .btn-secondary {
+    margin-left: 0;
+    border-radius: 20px; /* Закругленные края */
+  }
+  
+  header, footer {
+    padding: 0.5rem 0;
+  }
+  
+  .btn-secondary {
+    margin: 10px auto;
+    display: block;
+  }
 }
